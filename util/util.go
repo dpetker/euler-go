@@ -23,3 +23,7 @@ func IsPrime(n int) bool {
 
 	return true
 }
+
+func NumericByteToInt(b byte) int {
+	return int(b - 48)
+}
