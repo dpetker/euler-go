@@ -10,30 +10,32 @@ package main
 import "fmt"
 
 func main() {
-	factors := findFactors(600851475143)
-
-	fmt.Println(factors)
+	fmt.Println(findMaxFactor(600851475143))
 }
 
-func findFactors(testVal int) []int {
+func findMaxFactor(testVal int) int {
 	divisor := 2
-	factors := make([]int, 0, 1000)
+	currMax := 0
 
 	for testVal > 1 {
 		for testVal%divisor == 0 {
-			factors = append(factors, divisor)
+
+			if divisor > currMax {
+				currMax = divisor
+			}
+
 			testVal /= divisor
 		}
 
 		divisor++
 
 		if divisor*divisor > testVal {
-			if testVal > 1 {
-				factors = append(factors, testVal)
+			if testVal > 1 && testVal > currMax {
+				currMax = testVal
 			}
-			return factors
+			return currMax
 		}
 	}
 
-	return factors
+	return currMax
 }
