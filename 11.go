@@ -50,21 +50,66 @@ func main() {
 }
 
 func findMaxVertical(field [][]int, c chan int) {
-	// TODO: finish me
-	c <- field[0][0]
+	currMax := 0
+
+	// for each column
+	for i := 0; i < len(field[0]); i++ {
+		// sliding window of 4
+		for j := 0; j < len(field)-4; j++ {
+			test := field[j][i] * field[j+1][i] * field[j+2][i] * field[j+3][i]
+			if test > currMax {
+				currMax = test
+			}
+		}
+	}
+
+	c <- currMax
 }
 
 func findMaxHorizontal(field [][]int, c chan int) {
-	// TODO: finish me
-	c <- field[0][1]
+	currMax := 0
+
+	// for each row
+	for i := 0; i < len(field); i++ {
+		// sliding window of 4
+		for j := 0; j < len(field[i])-4; j++ {
+			test := field[i][j] * field[i][j+1] * field[i][j+2] * field[i][j+3]
+			if test > currMax {
+				currMax = test
+			}
+		}
+	}
+
+	c <- currMax
 }
 
 func findMaxForwardSlash(field [][]int, c chan int) {
-	// TODO: finish me
-	c <- field[0][2]
+	currMax := 0
+
+	// start at 3, 0 for this one
+	for i := 3; i < len(field[0]); i++ {
+		for j := 0; j < len(field[i])-4; j++ {
+			test := field[i][j] * field[i-1][j+1] * field[i-2][j+2] * field[i-3][j+3]
+			if test > currMax {
+				currMax = test
+			}
+		}
+	}
+
+	c <- currMax
 }
 
 func findMaxBackSlash(field [][]int, c chan int) {
-	// TODO: finish me
-	c <- field[0][3]
+	currMax := 0
+
+	for i := 0; i < len(field[0])-4; i++ {
+		for j := 0; j < len(field)-4; j++ {
+			test := field[j][i] * field[j+1][i+1] * field[j+2][i+2] * field[j+3][i+3]
+			if test > currMax {
+				currMax = test
+			}
+		}
+	}
+
+	c <- currMax
 }
