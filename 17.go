@@ -7,6 +7,8 @@ package main
 
 import (
 	"fmt"
+	"sync"
+	"sync/atomic"
 )
 
 var baseDict = map[int]int{
@@ -43,13 +45,23 @@ var baseDict = map[int]int{
 }
 
 func main() {
-	sum := 0
+	var sum uint32
+	var wg sync.WaitGroup
+
+	wg.Add(1000)
 
 	for i := 1; i < 1001; i++ {
-		sum += findCharCount(i)
+		go parallelWordCounter(i, &sum, &wg)
 	}
 
+	wg.Wait()
+
 	fmt.Println(sum)
+}
+
+func parallelWordCounter(num int, accum *uint32, wg *sync.WaitGroup) {
+	atomic.AddUint32(accum, uint32(findCharCount(num)))
+	wg.Done()
 }
 
 func findCharCount(num int) int {
