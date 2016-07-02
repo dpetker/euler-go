@@ -10,6 +10,7 @@ import (
 )
 
 var baseDict = map[int]int{
+	0:    0,
 	1:    len("one"),
 	2:    len("two"),
 	3:    len("three"),
@@ -31,14 +32,14 @@ var baseDict = map[int]int{
 	19:   len("nineteen"),
 	20:   len("twenty"),
 	30:   len("thirty"),
-	40:   len("fourty"),
+	40:   len("forty"),
 	50:   len("fifty"),
 	60:   len("sixty"),
 	70:   len("seventy"),
 	80:   len("eighty"),
 	90:   len("ninety"),
 	100:  len("hundred"),
-	1000: len("thousand"),
+	1000: len("onethousand"),
 }
 
 func main() {
@@ -52,8 +53,26 @@ func main() {
 }
 
 func findCharCount(num int) int {
-	if num <= 20 {
+	switch {
+	case num <= 20 || num == 1000:
 		return baseDict[num]
+	case num > 20 && num < 100:
+		tens := (num / 10) * 10
+		ones := num % 10
+		return baseDict[tens] + baseDict[ones]
+	case num >= 100 && num < 1000:
+		hundreds := num / 100
+		remainder := num % 100
+
+		// +3 letters for "and" as in, "one hundred and forty two"
+		tempSum := baseDict[hundreds] + baseDict[100] + 3 + findCharCount(remainder)
+
+		if remainder == 0 {
+			// No "and" when we're right on a hundred
+			tempSum -= 3
+		}
+
+		return tempSum
 	}
 
 	return 0
